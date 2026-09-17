@@ -7,12 +7,29 @@ const title = document.querySelector('#title');
 const transfers = new Map();
 let expiryTimer;
 
+function showJPEG(dataURL, titleText) {
+  const next = new Image();
+  next.onload = () => {
+    image.src = next.src;
+    title.textContent = titleText;
+    empty.hidden = true;
+    view.hidden = false;
+  };
+  next.onerror = () => {
+    image.src = dataURL;
+    title.textContent = titleText;
+    empty.hidden = true;
+    view.hidden = false;
+  };
+  next.src = dataURL;
+}
+
 function clearView() {
   clearTimeout(expiryTimer);
   expiryTimer = undefined;
   image.removeAttribute('src');
   view.hidden = true;
-  empty.hidden = false;
+  empty.hidden = true;
   transfers.clear();
 }
 
@@ -85,10 +102,7 @@ context.addCustomMessageListener(namespace, event => {
       reject(event, 'INCOMPLETE_VIEW');
       return;
     }
-    image.src = `data:image/jpeg;base64,${transfer.chunks.join('')}`;
-    title.textContent = transfer.title;
-    empty.hidden = true;
-    view.hidden = false;
+    showJPEG(`data:image/jpeg;base64,${transfer.chunks.join('')}`, transfer.title);
     clearTimeout(expiryTimer);
     const remaining = Math.min(30 * 60_000, Math.max(0, transfer.expiresAt - Date.now()));
     expiryTimer = setTimeout(clearView, remaining);
@@ -114,4 +128,7 @@ context.addEventListener(
 context.start({
   disableIdleTimeout: true,
   statusText: 'Fling ist bereit',
+  customNamespaces: {
+    [namespace]: cast.framework.system.MessageType.JSON,
+  },
 });
