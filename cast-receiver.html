@@ -9,18 +9,13 @@
 </head>
 <body>
   <main>
-    <header><span>fling</span><b>↗</b></header>
-    <section id="empty">
-      <div class="mark">↗</div>
-      <h1>Bereit zum Zeigen</h1>
-      <p>Wähle auf deinem Gerät einen Inhalt und wirf ihn hierher.</p>
-    </section>
+    <section id="empty" hidden></section>
     <section id="view" hidden>
       <img id="content" alt="">
       <footer><span id="title">Fling-Ansicht</span><span>Nur zeigen</span></footer>
     </section>
   </main>
   <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
-  <script type="module" src="./cast-receiver.js"></script>
+  <script src="./cast-receiver.js"></script>
 </body>
 </html>
